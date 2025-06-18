@@ -244,35 +244,35 @@ local Load = function()
         end
     end)
 
-    --// LMB + 200ms click behavior
-    ServiceConnections.InputBeganConnection = Connect(__index(UserInputService, "InputBegan"), function(Input)
-        local TriggerKey, Toggle = Settings.TriggerKey, Settings.Toggle
-        if Typing then return end
+ ServiceConnections.InputBeganConnection = Connect(__index(UserInputService, "InputBegan"), function(Input)
+    local TriggerKey, Toggle = Settings.TriggerKey, Settings.Toggle
+    if Typing then return end
 
-        if Input.UserInputType == Enum.UserInputType.Keyboard and Input.KeyCode == TriggerKey 
-        or Input.UserInputType == TriggerKey then
+    if Input.UserInputType == Enum.UserInputType.Keyboard and Input.KeyCode == TriggerKey 
+    or Input.UserInputType == TriggerKey then
 
-            if Toggle then
-                Running = not Running
-                if not Running then CancelLock() end
-            else
-                Running = true
-                task.spawn(function()
-                    local StartTime = tick()
-                    while Running do
-                        if tick() - StartTime >= 0.2 then
-                            if not __index(UserInputService, "IsMouseButtonPressed")(Enum.UserInputType.MouseButton1) then
-                                Running = false
-                                CancelLock()
-                            end
+        if Toggle then
+            Running = not Running
+            if not Running then CancelLock() end
+        else
+            Running = true
+            local StartTime = tick()
+            task.spawn(function()
+                while Running do
+                    local Elapsed = tick() - StartTime
+                    if Elapsed >= 0.2 then
+                        if not __index(UserInputService, "IsMouseButtonPressed")(Enum.UserInputType.MouseButton1) then
+                            Running = false
+                            CancelLock()
                             break
                         end
-                        task.wait(0.01)
                     end
-                end)
-            end
+                    task.wait(0.01)
+                end
+            end)
         end
-    end)
+    end
+end)
 
     ServiceConnections.InputEndedConnection = Connect(__index(UserInputService, "InputEnded"), function(Input)
         local TriggerKey, Toggle = Settings.TriggerKey, Settings.Toggle
