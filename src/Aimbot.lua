@@ -1,4 +1,3 @@
-@@ -1,401 +1,401 @@
 --[[
 
 	Universal Aimbot Module by Exunys © CC0 1.0 Universal (2023 - 2024)
